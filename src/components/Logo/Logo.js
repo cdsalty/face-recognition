@@ -14,7 +14,7 @@ const Logo = () => {
         <div className="Tilt-inner pa4">
           <img
             style={{ paddingTop: "5px" }}
-            alt="logo of brain"
+            alt="logo of head with brain"
             src={headBrain}
           />
         </div>
