@@ -9,7 +9,7 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-  apiKey: "NOT FOR SHOW"
+  apiKey: "1854d61699964a4a87f01b705361447f"
 });
 
 const particlesOptions = {
@@ -29,12 +29,14 @@ class App extends Component {
     super();
     this.state = {
       input: "",
-      imageUrl: "" // Now I need to change the current, preloaded url, to 'imageUrl'.
+      imageUrl: "" // the imageUrl needs to updated and displayed when user clicks 'onButtonSubmit'
     };
   }
 
   onInputChange = event => {
-    console.log(event.target.value);
+    // this should update the event component equal to the input
+    // console.log(event.target.value);
+    this.setState({ input: event.target.value }); // so now we can get the value of the input entered.
   };
 
   /*
@@ -54,12 +56,14 @@ class App extends Component {
 
   // What to happen when user submits? Need to run the clarifia api documentation.
   onButtonSubmit = () => {
-    console.log("The Detect Button was clicked");
+    // console.log("The Detect Button was clicked");    **
+    this.setState({ imageUrl: this.state.input }); // set the state equal to have imageUrl updated with whatever is input. This allows us to pass it to imageRecognition.
     app.models
       .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        "a403429f2ddf4b49b307e318f00e528b",
-        "https://samples.clarifai.com/face-det.jpg"
+        // Clarifai.FACE_DETECT_MODEL,
+        Clarifai.COLOR_MODEL,
+        // "https://samples.clarifai.com/face-det.jpg"
+        this.state.input
       )
       .then(
         function(response) {
@@ -82,7 +86,9 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         />
-        <FaceRecognition />
+        {/* By passing the imageUrl in below, we can now use it in the FaceRecognition.js and set it equal to 
+        the imageUrl */}
+        <FaceRecognition imageUrl={this.state.imageUrl} />
       </div>
     );
   }
