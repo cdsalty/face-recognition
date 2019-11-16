@@ -9,7 +9,7 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-  apiKey: "1854d61699964a4a87f01b705361447f"
+  apiKey: "sign up for api key"
 });
 
 const particlesOptions = {
@@ -57,17 +57,20 @@ class App extends Component {
   // What to happen when user submits? Need to run the clarifia api documentation.
   onButtonSubmit = () => {
     // console.log("The Detect Button was clicked");    **
-    this.setState({ imageUrl: this.state.input }); // set the state equal to have imageUrl updated with whatever is input. This allows us to pass it to imageRecognition.
+    this.setState({ imageUrl: this.state.input }); // imageUrl updated to whatever the input is
     app.models
       .predict(
-        // Clarifai.FACE_DETECT_MODEL,
-        Clarifai.COLOR_MODEL,
+        Clarifai.FACE_DETECT_MODEL,
+        // Clarifai.COLOR_MODEL,
         // "https://samples.clarifai.com/face-det.jpg"
         this.state.input
       )
       .then(
         function(response) {
-          console.log(response);
+          // create a function to show the result of the response
+          console.log(
+            response.outputs[0].data.regions[0].region_info.bounding_box
+          );
         },
         function(err) {
           // there was an error
