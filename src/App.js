@@ -9,7 +9,6 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-  apiKey: "1854d61699964a4a87f01b705361447f"
   // apiKey: "Sign up for API key"
 });
 
@@ -58,7 +57,7 @@ class App extends Component {
   // box = the returned value of calculateFaceLocation
   // displayFaceBox will call calculateFaceLocation as the box parameter in the response onSubmit
   displayFaceBox = box => {
-    console.log(box);
+    console.log(box); // the box endpoints are listed correctly.
     this.setState({ box: box });
   };
 
