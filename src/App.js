@@ -9,7 +9,8 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-  apiKey: "Sign up for API KEY"
+  apiKey: "1854d61699964a4a87f01b705361447f"
+  // apiKey: "Sign up for API key"
 });
 
 const particlesOptions = {
@@ -33,17 +34,32 @@ class App extends Component {
       box: {} // will hold the data targets to calcualte and plot
     };
   }
-
+  // CALCULATE FACE NEEDS TO RETURN AN OBJECT WITH END POINTS OF THE FACE BOX
   calculateFaceLocation = data => {
-    // eslint-disable-next-line no-unused-vars
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
     // Need to manipulate DOM first
     const image = document.getElementById("input-image");
-    const width = Number(image.width); // take the width returned and make it a number
+    // need the image width and height to calculate the different corners of the face
+    const width = Number(image.width); // use Number() to take the returned value and make it a number
     const height = Number(image.height);
-    // by gettiung the width and height, we can work on getting the boxing-box indicators and drawing the box
-    console.log(width, height); // getting the rendered image's width and height;
+    // by gettiung the width and height, we can determine the bounding_box
+    // console.log(width, height); // getting the rendered image's width and height;
+    return {
+      // MUST return an object for the key value pairs to show where the dots on the page should be
+      leftCol: clarifaiFace.left_col * width, // left_col is the percentage of the width.
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - clarifaiFace.right_col * width,
+      bottomRow: height - clarifaiFace.bottom_row * height
+    };
+  };
+
+  // create a function to take a value and set it equal to the state's new box value
+  // box = the returned value of calculateFaceLocation
+  // displayFaceBox will call calculateFaceLocation as the box parameter in the response onSubmit
+  displayFaceBox = box => {
+    console.log(box);
+    this.setState({ box: box });
   };
 
   onInputChange = event => {
@@ -61,9 +77,11 @@ class App extends Component {
         // takes the model and the input/picture to detect
         Clarifai.FACE_DETECT_MODEL,
         this.state.input
+      ) // take the response, pass it into calculateFaceLocation in order to display the face box
+      .then(response =>
+        this.displayFaceBox(this.calculateFaceLocation(response))
       )
-      .then(response => this.calculateFaceLocation(response))
-      // console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
+      // console.log(response.outputs[0].data.regions[0].region_info.bounding_box); // this will be used inside the function, calculateFaceLocation
       .catch(err => console.log(err));
   };
   // there was an error
