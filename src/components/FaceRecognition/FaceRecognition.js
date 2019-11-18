@@ -1,7 +1,8 @@
 import React from "react";
+import "./FaceRecognition.css";
 
-const FaceRecognition = ({ imageUrl }) => {
-  // destructured imageUrl
+const FaceRecognition = ({ imageUrl, box }) => {
+  // destructured imageUrl and box
   // console.log("check", imageUrl);
   return (
     <div className="center ma">
@@ -12,7 +13,16 @@ const FaceRecognition = ({ imageUrl }) => {
           src={imageUrl}
           width="500px"
           height="auto"
-        ></img>
+        />
+        <div
+          className="bounding-box"
+          style={{
+            top: box.topRow,
+            right: box.rightCol,
+            bottom: box.bottomRow,
+            left: box.leftCol
+          }}
+        ></div>
       </div>
     </div>
   );

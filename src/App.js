@@ -96,8 +96,8 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         />
-        {/* passing imageUrl as a prop */}
-        <FaceRecognition imageUrl={this.state.imageUrl} />
+        {/* passing box and imageUrl as a prop to the FaceRecognition Component*/}
+        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
       </div>
     );
   }
