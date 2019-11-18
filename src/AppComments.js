@@ -9,7 +9,7 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-  apiKey: "Sign up for API KEY"
+  apiKey: "1854d61699964a4a87f01b705361447f"
 });
 
 const particlesOptions = {
@@ -29,30 +29,32 @@ class App extends Component {
     super();
     this.state = {
       input: "",
-      imageUrl: "",
-      box: {} // will hold the data targets to calcualte and plot
+      imageUrl: "" // the imageUrl needs to updated and displayed when user clicks 'onButtonSubmit'
     };
   }
-
-  calculateFaceLocation = data => {
-    // eslint-disable-next-line no-unused-vars
-    const clarifaiFace =
-      data.outputs[0].data.regions[0].region_info.bounding_box;
-    // Need to manipulate DOM first
-    const image = document.getElementById("input-image");
-    const width = Number(image.width); // take the width returned and make it a number
-    const height = Number(image.height);
-    // by gettiung the width and height, we can work on getting the boxing-box indicators and drawing the box
-    console.log(width, height); // getting the rendered image's width and height;
-  };
 
   onInputChange = event => {
     // this should update the event component equal to the input
     // console.log(event.target.value);
-    this.setState({ input: event.target.value }); // set state equal to the value of input
+    this.setState({ input: event.target.value }); // so now we can get the value of the input entered.
   };
 
-  // run Clarifia Api documentation
+  /*
+* app.models
+* .predict(
+* Clarifai.FACE_DETECT_MODEL,
+*     // URL
+*     "https://samples.clarifai.com/metro-north.jpg"
+* )
+* .then(function(response) {
+*     // do something with response console.log(response);
+*     },
+*     function(err) {// there was an error}
+* );
+
+*/
+
+  // What to happen when user submits? Need to run the clarifia api documentation.
   onButtonSubmit = () => {
     // console.log("The Detect Button was clicked");    **
     this.setState({ imageUrl: this.state.input }); // imageUrl updated to whatever the input is
@@ -60,13 +62,22 @@ class App extends Component {
       .predict(
         // takes the model and the input/picture to detect
         Clarifai.FACE_DETECT_MODEL,
+        // Clarifai.COLOR_MODEL,  to run the model that detects primary colors
+        // "https://samples.clarifai.com/face-det.jpg"
         this.state.input
       )
-      .then(response => this.calculateFaceLocation(response))
-      // console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
-      .catch(err => console.log(err));
+      .then(
+        function(response) {
+          // create a function to show the result of the response
+          console.log(
+            response.outputs[0].data.regions[0].region_info.bounding_box
+          );
+        },
+        function(err) {
+          // there was an error
+        }
+      );
   };
-  // there was an error
 
   render() {
     return (
@@ -79,7 +90,8 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         />
-        {/* passing imageUrl as a prop */}
+        {/* By passing the imageUrl in below, we can now use it in the FaceRecognition.js and set it equal to 
+        the imageUrl */}
         <FaceRecognition imageUrl={this.state.imageUrl} />
       </div>
     );
@@ -87,3 +99,12 @@ class App extends Component {
 }
 
 export default App;
+
+/*
+Starting components:
+  - Navigation      - COMPLETED
+  - Logo            - COMPLETED
+  - Rank            - COMPLETED
+  - ImageLinkForm   - READY (adding state)
+  - FaceRecognition 
+*/
