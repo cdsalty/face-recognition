@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Particles from "react-particles-js";
 import Clarifai from "clarifai";
 import Navigation from "./components/Navigation/Navigation";
+import SignIn from "./components/SignIn/SignIn";
 import Logo from "./components/Logo/Logo";
 import "./App.css";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
@@ -9,6 +10,7 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
+  apiKey: "1854d61699964a4a87f01b705361447f"
   // apiKey: "Sign up for API key"
 });
 
@@ -90,6 +92,7 @@ class App extends Component {
       <div className="App">
         <Particles className="particles" params={particlesOptions} />
         <Navigation />
+        <SignIn />
         <Logo />
         <Rank />
         <ImageLinkForm
