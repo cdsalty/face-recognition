@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Particles from "react-particles-js";
 import Clarifai from "clarifai";
 import Navigation from "./components/Navigation/Navigation";
-import SignIn from "./components/SignIn/SignIn";
+import Signin from "./components/Signin/Signin";
 import Logo from "./components/Logo/Logo";
 import "./App.css";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
@@ -31,7 +31,8 @@ class App extends Component {
     this.state = {
       input: "",
       imageUrl: "",
-      box: {} // will hold the data targets to calcualte and plot
+      box: {}, // will hold the data targets to calcualte and plot
+      route: "signin" //will always be defaulted to signin unless user is signined in.
     };
   }
   // CALCULATE FACE NEEDS TO RETURN AN OBJECT WITH END POINTS OF THE FACE BOX
@@ -84,22 +85,34 @@ class App extends Component {
       // console.log(response.outputs[0].data.regions[0].region_info.bounding_box); // this will be used inside the function, calculateFaceLocation
       .catch(err => console.log(err));
   };
-  // there was an error
+
+  onRouteChange = () => {
+    this.setState({ route: "home" });
+  }; //NEXT, PASS THE TO THE SIGNIN COMPONENT AS A PROP AND PASS IT TO AN EVENT CHANGE, ONCLICK = {onRouteChange}
 
   render() {
     return (
       <div className="App">
         <Particles className="particles" params={particlesOptions} />
         <Navigation />
-        <SignIn />
         <Logo />
-        <Rank />
-        <ImageLinkForm
-          onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSubmit}
-        />
-        {/* passing box and imageUrl as a prop to the FaceRecognition Component*/}
-        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+        {this.state.route === "signin" ? (
+          <Signin onRouteChange={this.onRouteChange} />
+        ) : (
+          // if the state is signin,  it will display otherwise, it will not show the component
+          <div>
+            <Rank />
+            <ImageLinkForm
+              onInputChange={this.onInputChange}
+              onButtonSubmit={this.onButtonSubmit}
+            />
+            {/* passing box and imageUrl as a prop to the FaceRecognition Component*/}
+            <FaceRecognition
+              box={this.state.box}
+              imageUrl={this.state.imageUrl}
+            />
+          </div>
+        )}
       </div>
     );
   }
