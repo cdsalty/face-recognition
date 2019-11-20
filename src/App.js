@@ -3,6 +3,7 @@ import Particles from "react-particles-js";
 import Clarifai from "clarifai";
 import Navigation from "./components/Navigation/Navigation";
 import Signin from "./components/Signin/Signin";
+import Register from "./components/Register/Register";
 import Logo from "./components/Logo/Logo";
 import "./App.css";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
@@ -10,7 +11,8 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-  apiKey: "Sign up for API key"
+  apiKey: "1854d61699964a4a87f01b705361447f"
+  // apiKey: "Sign up for API key"
 });
 
 const particlesOptions = {
@@ -32,7 +34,8 @@ class App extends Component {
       input: "",
       imageUrl: "",
       box: {}, // will hold the data targets to calcualte and plot
-      route: "signin" //will always be defaulted to signin unless user is signined in.
+      route: "signin" // keeps track of where the user is on the page; inital load should be signin
+      // for now, anything not equal to signin will not show the signin component.
     };
   }
   // CALCULATE FACE NEEDS TO RETURN AN OBJECT WITH END POINTS OF THE FACE BOX
@@ -86,20 +89,18 @@ class App extends Component {
       .catch(err => console.log(err));
   };
 
-  onRouteChange = () => {
-    this.setState({ route: "home" });
-  }; //NEXT, PASS THE TO THE SIGNIN COMPONENT AS A PROP AND PASS IT TO AN EVENT CHANGE, ONCLICK = {onRouteChange}
+  onRouteChange = route => {
+    this.setState({ route: route }); // the route will be what we give it.
+  };
+  //NEXT, pass to the signin component AS A PROP on the input element with an event handler, onClick = {onRouteChange}
 
   render() {
     return (
       <div className="App">
         <Particles className="particles" params={particlesOptions} />
-        <Navigation />
+        <Navigation onRouteChange={this.onRouteChange} />
         <Logo />
-        {this.state.route === "signin" ? (
-          <Signin onRouteChange={this.onRouteChange} />
-        ) : (
-          // if the state is signin,  it will display otherwise, it will not show the component
+        {this.state.route === "home" ? (
           <div>
             <Rank />
             <ImageLinkForm
@@ -112,7 +113,14 @@ class App extends Component {
               imageUrl={this.state.imageUrl}
             />
           </div>
-        )}
+        ) : this.state.route === "signin" ? (
+          <Signin onRouteChange={this.onRouteChange} />
+        ) : (
+          <Register onRouteChange={this.onRouteChange} />
+        )
+
+        // if the state is signin,  it will display otherwise, it will not show the component
+        }
       </div>
     );
   }
