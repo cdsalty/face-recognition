@@ -33,8 +33,10 @@ class App extends Component {
       input: "",
       imageUrl: "",
       box: {}, // will hold the data targets to calcualte and plot
-      route: "signin" // keeps track of where the user is on the page; inital load should be signin
+      route: "signin", // keeps track of where the user is on the page; inital load should be signin
       // for now, anything not equal to signin will not show the signin component.
+      // isSignedIn: "false"  // small but crucial error I made.
+      isSignedIn: false
     };
   }
   // CALCULATE FACE NEEDS TO RETURN AN OBJECT WITH END POINTS OF THE FACE BOX
@@ -89,17 +91,28 @@ class App extends Component {
   };
 
   onRouteChange = route => {
-    this.setState({ route: route }); // the route will be what we give it.
+    // this.setState({ route: route }); // the route will be what we give it.
+    if (route === "signout") {
+      this.setState({ isSignedIn: false });
+    } else if (route === "home") {
+      this.setState({ isSignedIn: true });
+    }
+    this.setState({ route: route });
   };
+
   //NEXT, pass to the signin component AS A PROP on the input element with an event handler, onClick = {onRouteChange}
 
   render() {
+    const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
         <Particles className="particles" params={particlesOptions} />
-        <Navigation onRouteChange={this.onRouteChange} />
+        <Navigation
+          isSignedIn={isSignedIn} // since it's coming from the state
+          onRouteChange={this.onRouteChange} // vs. coming from a function outside the state's scope
+        />
         <Logo />
-        {this.state.route === "home" ? (
+        {route === "home" ? (
           <div>
             <Rank />
             <ImageLinkForm
@@ -107,12 +120,9 @@ class App extends Component {
               onButtonSubmit={this.onButtonSubmit}
             />
             {/* passing box and imageUrl as a prop to the FaceRecognition Component*/}
-            <FaceRecognition
-              box={this.state.box}
-              imageUrl={this.state.imageUrl}
-            />
+            <FaceRecognition box={box} imageUrl={imageUrl} />
           </div>
-        ) : this.state.route === "signin" ? (
+        ) : route === "signin" ? (
           <Signin onRouteChange={this.onRouteChange} />
         ) : (
           <Register onRouteChange={this.onRouteChange} />
