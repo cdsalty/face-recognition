@@ -11,7 +11,9 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-  apiKey: "Sign up for API key"
+
+
+  // apiKey: "Sign up for API key"
 });
 
 const particlesOptions = {
@@ -125,10 +127,10 @@ class App extends Component {
         ) : route === "signin" ? (
           <Signin onRouteChange={this.onRouteChange} />
         ) : (
-          <Register onRouteChange={this.onRouteChange} />
-        )
+              <Register onRouteChange={this.onRouteChange} />
+            )
 
-        // if the state is signin,  it will display otherwise, it will not show the component
+          // if the state is signin,  it will display otherwise, it will not show the component
         }
       </div>
     );
