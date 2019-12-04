@@ -11,8 +11,6 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-
-
   // apiKey: "Sign up for API key"
 });
 
@@ -41,6 +39,15 @@ class App extends Component {
       isSignedIn: false
     };
   }
+
+  // THE START OF CONNECTING TO THE BACKEND --> anytime we need to connect to outside world, use fetch
+  // componentDidMount() {
+  //   fetch("http://localhost:3000/") // if you follow this root route, '/', in the server, you see it's returning a list of the users in the database (database.users)
+  //     .then(response => response.json())
+  //     .then(console.log); // returns a list of current users in created database
+  // }  ***** now that it is working correctly, we can move on to more wins. ******
+  // THINK, HOW TO GET THE SIGNIN ENDPOINT TO WORK
+
   // CALCULATE FACE NEEDS TO RETURN AN OBJECT WITH END POINTS OF THE FACE BOX
   calculateFaceLocation = data => {
     const clarifaiFace =
@@ -127,10 +134,10 @@ class App extends Component {
         ) : route === "signin" ? (
           <Signin onRouteChange={this.onRouteChange} />
         ) : (
-              <Register onRouteChange={this.onRouteChange} />
-            )
+          <Register onRouteChange={this.onRouteChange} />
+        )
 
-          // if the state is signin,  it will display otherwise, it will not show the component
+        // if the state is signin,  it will display otherwise, it will not show the component
         }
       </div>
     );
