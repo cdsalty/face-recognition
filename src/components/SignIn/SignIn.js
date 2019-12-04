@@ -18,10 +18,25 @@ class Signin extends React.Component {
   };
 
   onSubmitSignIn = () => {
-    console.log(this.state);
-    this.props.onRouteChange("home");
+    // console.log(this.state);
+    fetch("http://localhost:3000/signin", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      // the body will send what we have so be sure to stringify
+      body: JSON.stringify({
+        email: this.state.signInEmail,
+        password: this.state.signInPassword
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data === "success") {
+          // VERY IMPORTANT THIS MESSAGE ALIGNS WITH THE MESSAGE WE CREATE IN NODE
+          this.props.onRouteChange("home");
+        }
+      });
   };
-
+  // this.props.onRouteChange("home");
   render() {
     // const { onRouteChange } = this.props; // If I wanted to destructure
     return (
