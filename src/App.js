@@ -11,7 +11,7 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
-  apiKey: "Sign up for API key"
+  // apiKey: "Sign up for API key"
 });
 
 const particlesOptions = {
@@ -36,7 +36,15 @@ class App extends Component {
       route: "signin", // keeps track of where the user is on the page; inital load should be signin
       // for now, anything not equal to signin will not show the signin component.
       // isSignedIn: "false"  // small but crucial error I made.
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        // and copy from whatever we already get for the database
+        id: "",
+        name: "",
+        email: "",
+        entries: 0,
+        joined: ""
+      }
     };
   }
 
