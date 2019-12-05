@@ -11,6 +11,7 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 const app = new Clarifai.App({
+  apiKey: "1854d61699964a4a87f01b705361447f"
   // apiKey: "Sign up for API key"
 });
 
@@ -48,12 +49,25 @@ class App extends Component {
     };
   }
 
+  // create a loadUser function that will load the user details listed above, in the state
+  loadUser = data => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    });
+  };
+
   // THE START OF CONNECTING TO THE BACKEND --> anytime we need to connect to outside world, use fetch
   // componentDidMount() {
   //   fetch("http://localhost:3000/") // if you follow this root route, '/', in the server, you see it's returning a list of the users in the database (database.users)
   //     .then(response => response.json())
   //     .then(console.log); // returns a list of current users in created database
-  // }  ***** now that it is working correctly, we can move on to more wins. ******
+  // }  ***** now that it is working correctly, move on for more wins. ******
   // THINK, HOW TO GET THE SIGNIN ENDPOINT TO WORK
 
   // CALCULATE FACE NEEDS TO RETURN AN OBJECT WITH END POINTS OF THE FACE BOX
@@ -131,7 +145,10 @@ class App extends Component {
         <Logo />
         {route === "home" ? (
           <div>
-            <Rank />
+            <Rank
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+            />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
@@ -140,9 +157,12 @@ class App extends Component {
             <FaceRecognition box={box} imageUrl={imageUrl} />
           </div>
         ) : route === "signin" ? (
-          <Signin onRouteChange={this.onRouteChange} />
+          <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
-          <Register onRouteChange={this.onRouteChange} />
+          <Register
+            loadUser={this.loadUser}
+            onRouteChange={this.onRouteChange}
+          />
         )
 
         // if the state is signin,  it will display otherwise, it will not show the component

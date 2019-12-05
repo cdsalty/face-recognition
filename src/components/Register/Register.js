@@ -38,6 +38,7 @@ class Register extends React.Component {
       .then(response => response.json())
       .then(user => {
         if (user) {
+          this.props.loadUser(user); // created and then went into app.js to define what loadUser
           // if we get a user back, then go to home page
           // VERY IMPORTANT THIS MESSAGE ALIGNS WITH THE MESSAGE WE CREATE IN NODE
           this.props.onRouteChange("home");
@@ -46,7 +47,7 @@ class Register extends React.Component {
       });
   };
   render() {
-    const { onRouteChange } = this.props;
+    // const { onRouteChange } = this.props;
     return (
       <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
         <main className="pa4 black-80">
@@ -78,7 +79,7 @@ class Register extends React.Component {
                 />
               </div>
               <div className="mv3">
-                <label className="db fw6 lh-copy f6" for="password">
+                <label className="db fw6 lh-copy f6" htmlFor="password">
                   Password
                 </label>
                 <input
@@ -99,7 +100,7 @@ class Register extends React.Component {
                 onClick={this.onSubmitSignIn}
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                 type="submit"
-                value="Sign in"
+                value="Register"
               />
             </div>
           </div>

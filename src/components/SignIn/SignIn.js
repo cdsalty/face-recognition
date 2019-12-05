@@ -29,14 +29,15 @@ class Signin extends React.Component {
       })
     })
       .then(response => response.json())
-      .then(data => {
-        if (data === "success") {
+      .then(user => {
+        if (user.id) {
+          this.props.loadUser(user);
           // VERY IMPORTANT THIS MESSAGE ALIGNS WITH THE MESSAGE WE CREATE IN NODE
           this.props.onRouteChange("home");
         }
       });
   };
-  // this.props.onRouteChange("home");
+
   render() {
     // const { onRouteChange } = this.props; // If I wanted to destructure
     return (
