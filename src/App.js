@@ -74,13 +74,10 @@ class App extends Component {
   calculateFaceLocation = data => {
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
-    // Need to manipulate DOM first
     const image = document.getElementById("input-image");
-    // need the image width and height to calculate the different corners of the face
     const width = Number(image.width); // use Number() to take the returned value and make it a number
     const height = Number(image.height);
     // by gettiung the width and height, we can determine the bounding_box
-    // console.log(width, height); // getting the rendered image's width and height;
     return {
       // MUST return an object for the key value pairs to show where the dots on the page should be
       leftCol: clarifaiFace.left_col * width, // left_col is the percentage of the width.
@@ -91,8 +88,6 @@ class App extends Component {
   };
 
   // create a function to take a value and set it equal to the state's new box value
-  // box = the returned value of calculateFaceLocation
-  // displayFaceBox will call calculateFaceLocation as the box parameter in the response onSubmit
   displayFaceBox = box => {
     console.log(box); // the box endpoints are listed correctly.
     this.setState({ box: box });
@@ -104,7 +99,7 @@ class App extends Component {
     this.setState({ input: event.target.value }); // set state equal to the value of input
   };
 
-  // run Clarifia Api documentation
+  // run Clarifia Api documentation (could also be called ' onPictureSubmit ')
   onButtonSubmit = () => {
     // console.log("The Detect Button was clicked");    **
     this.setState({ imageUrl: this.state.input }); // imageUrl updated to whatever the input is
@@ -113,11 +108,26 @@ class App extends Component {
         // takes the model and the input/picture to detect
         Clarifai.FACE_DETECT_MODEL,
         this.state.input
-      ) // take the response, pass it into calculateFaceLocation in order to display the face box
-      .then(response =>
-        this.displayFaceBox(this.calculateFaceLocation(response))
-      )
-      // console.log(response.outputs[0].data.regions[0].region_info.bounding_box); // this will be used inside the function, calculateFaceLocation
+      ) // take the response, pass it into calculateFaceLocation to display box around face
+      .then(response => {
+        if (response) {
+          fetch("http://localhost:3000/image", {
+            method: "put",
+            headers: { "Content-Type": "application/json" },
+            // back in the server, the only need for the image url is id
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(count => {
+              // used this in order to ONLY update the user object. what about spread operator?
+              this.setState(Object.assign(this.state.user, { entries: count }));
+              // assign this user the same state AND ONLY UPDATE the user ENTRIES
+            });
+        }
+        this.displayFaceBox(this.calculateFaceLocation(response));
+      })
       .catch(err => console.log(err));
   };
 
